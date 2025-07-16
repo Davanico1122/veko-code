@@ -1,0 +1,12 @@
+{
+  "name": "veko",
+  "version": "1.5.0",
+  "description": "Veko Programming Language CLI",
+  "main": "lib/veko.js",
+  "bin": {
+    "veko": "./bin/veko"
+  },
+  "keywords": ["language", "cli", "interpreter", "veko"],
+  "author": "Davanico1122",
+  "license": "MIT"
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Veko Playground</title>
+  <style>
+    body {
+      background: linear-gradient(to right, #141e30, #243b55);
+      color: #fff;
+      font-family: monospace;
+      padding: 2rem;
+    }
+    .glass {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      padding: 2rem;
+      border-radius: 15px;
+      max-width: 800px;
+      margin: auto;
+    }
+    textarea, pre {
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      padding: 1rem;
+      font-size: 1rem;
+      font-family: monospace;
+      margin-top: 1rem;
+    }
+    button {
+      padding: 0.6rem 1.2rem;
+      margin-top: 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="glass">
+    <h1>🦊 Veko Playground</h1>
+    <textarea id="editor" rows="10">let x = 5
+if x > 3 {
+  print "x lebih besar dari 3"
+} else {
+  print "x kecil"
+}</textarea>
+    <br />
+    <button onclick="runCode()">Run</button>
+    <pre id="output"></pre>
+  </div>
+  <script>
+    function runCode() {
+      const code = document.getElementById('editor').value;
+      const output = document.getElementById('output');
+      output.textContent = '';
+      Veko.run(code, prompt, msg => output.textContent += msg + '\n');
+    }
+
+    const Veko = {
+      run(code, input = prompt, output = console.log) {
+        const lines = code.split('\n').map(l => l.trim()).filter(Boolean);
+        let vars = {}, i = 0, funcs = {};
+
+        const parseBlock = (start) => {
+          let block = [], depth = 0;
+          for (let j = start; j < lines.length; j++) {
+            const line = lines[j];
+            if (line.includes('{')) depth++;
+            if (line.includes('}')) depth--;
+            block.push(line);
+            if (depth === 0) return [block, j];
+          }
+          return [block, lines.length];
+        };
+
+        while (i < lines.length) {
+          const line = lines[i];
+          if (line.startsWith('print ')) {
+            output(line.slice(6).replace(/["']/g, ''));
+          } else if (line.includes('=') && !line.startsWith('if')) {
+            const [key, val] = line.split('=').map(x => x.trim());
+            vars[key] = isNaN(val) ? val.replace(/["']/g, '') : Number(val);
+          } else if (line.startsWith('repeat')) {
+            const times = parseInt(line.split(' ')[1]);
+            const [block, end] = parseBlock(i + 1);
+            for (let r = 0; r < times; r++) {
+              Veko.run(block.slice(1, -1).join('\n'), input, output);
+            }
+            i = end;
+          } else if (line.startsWith('if')) {
+            const condition = line.slice(2, line.indexOf('{')).trim();
+            const [block, end] = parseBlock(i);
+            const result = eval(condition.replace(/([a-zA-Z]+)/g, (_, v) => vars[v] ?? v));
+            if (result) {
+              Veko.run(block.slice(1, -1).join('\n'), input, output);
+            } else if (lines[end + 1]?.startsWith('else')) {
+              const [elseBlock, elseEnd] = parseBlock(end + 1);
+              Veko.run(elseBlock.slice(1, -1).join('\n'), input, output);
+              i = elseEnd;
+            } else {
+              i = end;
+            }
+          } else if (line.startsWith('func ')) {
+            const name = line.split(' ')[1];
+            const [block, end] = parseBlock(i);
+            funcs[name] = block.slice(1, -1).join('\n');
+            i = end;
+          } else if (line.endsWith('()') && funcs[line.slice(0, -2)]) {
+            Veko.run(funcs[line.slice(0, -2)], input, output);
+          }
+          i++;
+        }
+      }
+    };
+  </script>
+</body>
+</html>

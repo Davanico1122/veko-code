@@ -1,0 +1,19 @@
+let name = input
+print "Hello, "
+print name
+
+repeat 3 {
+  print "Belajar Veko itu seru!"
+}
+
+let umur = 18
+if umur >= 17 {
+  print "Boleh punya KTP"
+} else {
+  print "Belum cukup umur"
+}
+
+func halo {
+  print "Ini dari fungsi!"
+}
+halo()
