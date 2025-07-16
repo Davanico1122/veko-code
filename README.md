@@ -1,40 +1,37 @@
-# 🦊 Veko Programming Language
+# Veko Language (Yellow Theme)
 
-**Veko** is a beginner-friendly interpreted language with custom syntax and browser support.
+**Veko** is a completely original programming language with its own syntax and style.
 
-## 🚀 Features
-- Simple syntax (`print`, `let`, `repeat`, `if`, `func`)
-- Web-based playground
-- CLI interpreter
-- MIT License
+## 🔤 Syntax Examples
 
-## 📦 Installation
+```veko
+say: "Hello"
+x <- 10
+name <- ask
+
+loop 3 times {
+  say: "Looping"
+}
+
+when x > 5 {
+  say: "Big"
+} else {
+  say: "Small"
+}
+
+fn greet {
+  say: "Hey!"
+}
+call greet
+```
+
+## 📦 Run CLI
+
 ```bash
 npm install -g .
 veko examples/hello.vk
 ```
 
-## 📄 Example Code (hello.vk)
-```vk
-let name = input("What is your name?")
-print "Hello, " + name
+## 🌐 Playground
 
-repeat 3 {
-  print "Learning Veko is fun!"
-}
-
-let age = 17
-if age >= 17 {
-  print "You can vote!"
-} else {
-  print "Too young to vote."
-}
-
-func greet {
-  print "Hi from Veko!"
-}
-greet()
-```
-
-## 🌐 Try Online
-https://Davanico1122.github.io/Veko
+Open `web/index.html` to run Veko in browser.

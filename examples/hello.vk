@@ -1,19 +1,20 @@
-let name = input
-print "Hello, "
-print name
+say: "Welcome to Veko!"
 
-repeat 3 {
-  print "Belajar Veko itu seru!"
+name <- ask
+say: "Hello, " + name
+
+loop 3 times {
+  say: "Veko is awesome!"
 }
 
-let umur = 18
-if umur >= 17 {
-  print "Boleh punya KTP"
+age <- 18
+when age >= 17 {
+  say: "You're an adult"
 } else {
-  print "Belum cukup umur"
+  say: "You're too young"
 }
 
-func halo {
-  print "Ini dari fungsi!"
+fn greet {
+  say: "This is from a function"
 }
-halo()
+call greet
